@@ -4,6 +4,7 @@ import api from "../lib/api";
 import jsPDF from "jspdf";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Clock, BarChart3 } from "lucide-react";
+import { useStudyContext } from "../components/StudyToolsContext.jsx";
 
 // Adaptive progression configuration
 const ADAPTIVE_CONFIG = {
@@ -34,6 +35,7 @@ const AdaptiveAssess = () => {
   const [currentQuestionTime, setCurrentQuestionTime] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [testEnded, setTestEnded] = useState(false);
+  useStudyContext({ mode: showResults ? "practice" : "assessment", question: showResults ? null : currentQuestion });
   const [submitted, setSubmitted] = useState(false);
 
   // Correct answers per difficulty (for adaptive stepping)
@@ -210,7 +212,7 @@ const AdaptiveAssess = () => {
         if (submitted) return;
         try {
           const { data } = await api.post(
-            "https://quiz-mu-dun.vercel.app/api/results",
+            "http://localhost:3000/api/results",
             {
               totalQuestions,
               correct: correctAnswers,

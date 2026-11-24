@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLevel } from "../context/LevelContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import {
   Eye,
@@ -15,6 +16,7 @@ import {
 
 export default function Auth() {
   const navigate = useNavigate();
+  const { clearLevel } = useLevel();
   const location = useLocation();
   const { login, register, loading, error, clearError } = useAuth();
 
@@ -69,12 +71,13 @@ export default function Auth() {
       return;
     }
     try {
-      const redirectTo = location.state?.from?.pathname || "/";
+      const redirectTo = "/level"; // always pick a level first
       if (isLogin) {
         await login({ email: formData.email, password: formData.password });
       } else {
         await register({ name: formData.name, gender: formData.gender, email: formData.email, password: formData.password });
       }
+      clearLevel();
       navigate(redirectTo, { replace: true });
     } catch (_) {
       // error is managed in context state; optionally show toast here

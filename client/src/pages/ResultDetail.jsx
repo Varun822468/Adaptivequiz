@@ -3,17 +3,44 @@ import { useParams } from "react-router-dom";
 import api from "../lib/api";
 import jsPDF from "jspdf";
 import { useAuth } from "../context/AuthContext.jsx";
+import ResultSummaryCard from "../components/ResultSummaryCard.jsx";
 
 export default function ResultDetail() {
   const { id } = useParams();
   const { user } = useAuth();
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [sumState, setSumState] = useState({ status: "idle", error: "" });
+
+  const generateSummary = async (force = false) => {
+    setSumState({ status: "summarising", error: "" });
+    try {
+      const { data } = await api.post(`/api/results/${id}/summary${force ? "?force=1" : ""}`);
+      setResult((r) => ({ ...r, summary: data.summary }));
+      setSumState({ status: "done", error: "" });
+    } catch (err) {
+      setSumState({
+        status: "error",
+        error: err?.response?.data?.message || "Could not generate the summary.",
+      });
+    }
+  };
+
+  const bySubject = useMemo(() => {
+    const map = {};
+    (result?.questions || []).forEach((q) => {
+      if (!q.subject) return;
+      map[q.subject] = map[q.subject] || { total: 0, correct: 0 };
+      map[q.subject].total += 1;
+      if (q.isCorrect) map[q.subject].correct += 1;
+    });
+    return Object.entries(map);
+  }, [result]);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const { data } = await api.get(`https://quiz-mu-dun.vercel.app/api/results/${id}`);
+        const { data } = await api.get(`http://localhost:3000/api/results/${id}`);
         setResult(data.result);
       } catch (_) {
         setResult(null);
@@ -175,7 +202,10 @@ export default function ResultDetail() {
     <div className="min-h-screen bg-white">
       <div className="max-w-5xl mx-auto p-6">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-blue-900">Result Details</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-blue-900">Result Details</h1>
+            {result.title ? <div className="text-sm text-blue-700">{result.title}</div> : null}
+          </div>
           <button onClick={downloadPdf} className="px-4 py-2 bg-blue-600 text-white rounded-lg">Download Report</button>
         </div>
 
@@ -214,6 +244,52 @@ export default function ResultDetail() {
           <div className="bg-white border border-blue-100 rounded-xl p-4">
             <div className="text-blue-900 font-semibold">Accuracy: {accuracy.toFixed(1)}%</div>
           </div>
+
+          {/* Summary */}
+          {result.summary?.overview || sumState.status !== "idle" ? (
+            <ResultSummaryCard
+              summary={result.summary}
+              status={sumState.status === "idle" ? "done" : sumState.status}
+              error={sumState.error}
+              onRetry={() => generateSummary(false)}
+              onRegenerate={() => generateSummary(true)}
+            />
+          ) : (
+            <div className="bg-violet-50 border border-violet-200 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="text-sm text-violet-900">No performance summary yet for this test.</div>
+              <button
+                onClick={() => generateSummary(false)}
+                className="px-4 py-2 bg-violet-600 text-white rounded-lg font-semibold text-sm"
+              >
+                Generate summary
+              </button>
+            </div>
+          )}
+
+          {/* Subject-wise marks (UPSC) */}
+          {bySubject.length > 0 && (
+            <div className="bg-white border border-blue-100 rounded-xl p-4">
+              <h2 className="text-xl font-bold text-blue-900 mb-3">Subject-wise marks</h2>
+              <div className="space-y-3">
+                {bySubject.map(([subject, v]) => (
+                  <div key={subject}>
+                    <div className="flex justify-between text-sm text-blue-900">
+                      <span className="capitalize font-semibold">{subject}</span>
+                      <span>
+                        {v.correct}/{v.total} ({Math.round((v.correct / v.total) * 100)}%)
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                      <div
+                        className="h-2 rounded-full bg-violet-500"
+                        style={{ width: `${(v.correct / v.total) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Questions */}
           <div className="bg-white border border-blue-100 rounded-xl p-4">

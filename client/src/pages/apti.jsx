@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { mixedQuestions } from "../assets/dataset/quiz-data.js";
 import mygif from "../assets/images/firework.gif";
+import { useStudyContext } from "../components/StudyToolsContext.jsx";
 
 const Apti = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -21,6 +22,7 @@ const Apti = () => {
   const [questionHistory, setQuestionHistory] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [practiceEnded, setPracticeEnded] = useState(false);
+  useStudyContext({ mode: "practice", question: showResults ? null : currentQuestion });
 
   const shakeRef = useRef(null);
   const burstRef = useRef(null);

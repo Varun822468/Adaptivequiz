@@ -3,6 +3,7 @@ import { mixedQuestions } from "../assets/dataset/quiz-data.js";
 import api from "../lib/api";
 import jsPDF from "jspdf";
 import { useAuth } from "../context/AuthContext.jsx";
+import { useStudyContext } from "../components/StudyToolsContext.jsx";
 
 const Assess = () => {
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -13,6 +14,7 @@ const Assess = () => {
   const [questionHistory, setQuestionHistory] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [testEnded, setTestEnded] = useState(false);
+  useStudyContext({ mode: showResults ? "practice" : "assessment", question: showResults ? null : currentQuestion });
   const [testQuestions, setTestQuestions] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -230,7 +232,7 @@ const Assess = () => {
         if (submitted) return;
         try {
           const { data } = await api.post(
-            "https://quiz-mu-dun.vercel.app/api/results",
+            "http://localhost:3000/api/results",
             {
               totalQuestions,
               correct: correctAnswers,

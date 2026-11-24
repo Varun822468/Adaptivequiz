@@ -1,4 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../lib/api";
+import { useStudyContext } from "../components/StudyToolsContext.jsx";
+import ResultSummaryCard from "../components/ResultSummaryCard.jsx";
 import {
   Clock,
   CheckCircle,
@@ -14,7 +18,11 @@ const DiffAssess = ({
   questionsData,
   assessmentTitle = "Aptitude Test",
   assessmentSubtitle = "Assessment",
+  mode = "practice", // "practice" | "assessment" (assessment hides the study chatbot)
+  saveResult = false, // store marks + generate a summary when finished
+  track = "foundation", // "foundation" | "upsc"
 }) => {
+  const navigate = useNavigate();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showExplanation, setShowExplanation] = useState(false);
   const [answers, setAnswers] = useState({});
@@ -37,6 +45,75 @@ const DiffAssess = ({
   });
   const [usedQuestions, setUsedQuestions] = useState(new Set());
   const [assessmentEnded, setAssessmentEnded] = useState(false);
+
+  // Whiteboard / chatbot context
+  useStudyContext({
+    mode: showResults ? "practice" : mode,
+    question: showResults ? null : testQuestions[currentQuestionIndex],
+  });
+
+  // Saving marks + summary (only when saveResult is on)
+  const [saveState, setSaveState] = useState({ status: "idle", id: "", summary: null, error: "" });
+  const saveStarted = useRef(false);
+
+  const requestSummary = async (id, force = false) => {
+    setSaveState((s) => ({ ...s, status: "summarising", error: "" }));
+    try {
+      const { data } = await api.post(`/api/results/${id}/summary${force ? "?force=1" : ""}`);
+      setSaveState({ status: "done", id, summary: data.summary, error: "" });
+    } catch (err) {
+      setSaveState({
+        status: "error",
+        id,
+        summary: null,
+        error: err?.response?.data?.message || "Marks were saved, but the summary could not be generated.",
+      });
+    }
+  };
+
+  const saveNow = () => {
+    const history = testQuestions.map((q, index) => ({
+      questionNumber: index + 1,
+      question: q.question,
+      selectedAnswer: answers[index] !== undefined ? q.options[answers[index]] : "Not Answered",
+      correctAnswer: q.options[q.correct],
+      isCorrect: answers[index] === q.correct,
+      difficulty: q.difficulty || "moderate",
+      subject: q.subject || "",
+      timeTaken: questionTimes[index] || 0,
+    }));
+    const total = history.length;
+    if (total < 1) return;
+    const correct = history.filter((q) => q.isCorrect).length;
+    setSaveState({ status: "saving", id: "", summary: null, error: "" });
+    (async () => {
+      try {
+        const { data } = await api.post("/api/results", {
+          totalQuestions: total,
+          correct,
+          wrong: total - correct,
+          avgTimeSec: Number((totalTestTime / 1000 / total).toFixed(2)),
+          questions: history,
+          track,
+          title: assessmentTitle,
+        });
+        await requestSummary(data.result._id);
+      } catch (err) {
+        setSaveState({
+          status: "error",
+          id: "",
+          summary: null,
+          error: err?.response?.data?.message || "Could not save your result.",
+        });
+      }
+    })();
+  };
+
+  useEffect(() => {
+    if (!showResults || !saveResult || saveStarted.current) return;
+    saveStarted.current = true;
+    saveNow();
+  }, [showResults]);
 
   // Requirements for level progression
   const progressionRules = {
@@ -393,6 +470,27 @@ const DiffAssess = ({
                   </div>
                 </div>
               </div>
+
+              {saveResult && saveState.status !== "idle" && (
+                <div className="mb-4 md:mb-6">
+                  <ResultSummaryCard
+                    summary={saveState.summary}
+                    status={saveState.status}
+                    error={saveState.error}
+                    onRetry={() =>
+                      saveState.id ? requestSummary(saveState.id) : saveNow()
+                    }
+                  />
+                  {saveState.id && (
+                    <button
+                      onClick={() => navigate(`/results/${saveState.id}`)}
+                      className="mt-3 text-sm font-semibold text-violet-700 hover:underline"
+                    >
+                      View saved result →
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div className="bg-gray-50 rounded-xl md:rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4 flex items-center">

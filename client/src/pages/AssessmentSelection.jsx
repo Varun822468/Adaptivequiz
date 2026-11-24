@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import LevelBanner from "../components/LevelBanner.jsx";
 
 const AssessmentSelection = () => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ const AssessmentSelection = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
+        <LevelBanner active="foundation" />
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -40,6 +42,7 @@ const AssessmentSelection = () => {
         >
           <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
             Assessment Mode
+            <span className="block text-2xl text-violet-600 mt-1">Foundation Level (Low)</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Choose your Assessment style to strengthen your skills

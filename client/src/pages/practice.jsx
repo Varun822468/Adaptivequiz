@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import LevelBanner from '../components/LevelBanner.jsx';
 
 const Practice = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Practice = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        
+        <LevelBanner active="foundation" />
         {/* Header */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }} 
@@ -36,7 +37,7 @@ const Practice = () => {
           transition={{ duration: 0.6 }} 
           className="text-center mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Practice Mode</h1>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Practice Mode <span className="block text-2xl text-violet-600 mt-1">Foundation Level (Low)</span></h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
             Choose your practice style to strengthen your skills
           </p>
