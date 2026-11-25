@@ -1,0 +1,212 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+.font-serif { font-family: "Playfair Display", Georgia, "Times New Roman", serif; }
+.font-rounded { font-family: "Nunito", system-ui, sans-serif; }
+body { font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif; }
+
+/* =====================================================================
+   LEVEL THEMES  (applied by <LevelLayout>)  -  every page inside a level
+   inherits the same palette, fonts and shapes. Tailwind v4 exposes its
+   colours as CSS variables, so remapping them restyles all utilities.
+   Green / red / emerald / rose stay untouched: they carry meaning
+   (correct / wrong).
+   ===================================================================== */
+
+/* ---------- HIGH LEVEL (UPSC): professional navy + gold ---------- */
+.theme-upsc {
+  --color-violet-50: #f1f4fa;
+  --color-violet-100: #e2e8f4;
+  --color-violet-200: #c5d0e6;
+  --color-violet-300: #9db0d3;
+  --color-violet-400: #6b87bb;
+  --color-violet-500: #3f5f9e;
+  --color-violet-600: #1f3a75;
+  --color-violet-700: #162c5c;
+  --color-violet-800: #0f2147;
+  --color-violet-900: #0b1530;
+  --color-violet-950: #070e20;
+  --color-purple-50: #f1f4fa;
+  --color-purple-100: #e2e8f4;
+  --color-purple-200: #c5d0e6;
+  --color-purple-300: #9db0d3;
+  --color-purple-400: #6b87bb;
+  --color-purple-500: #3f5f9e;
+  --color-purple-600: #1f3a75;
+  --color-purple-700: #162c5c;
+  --color-purple-800: #0f2147;
+  --color-purple-900: #0b1530;
+  --color-purple-950: #070e20;
+  --color-indigo-50: #f1f4fa;
+  --color-indigo-100: #e2e8f4;
+  --color-indigo-200: #c5d0e6;
+  --color-indigo-300: #9db0d3;
+  --color-indigo-400: #6b87bb;
+  --color-indigo-500: #3f5f9e;
+  --color-indigo-600: #1f3a75;
+  --color-indigo-700: #162c5c;
+  --color-indigo-800: #0f2147;
+  --color-indigo-900: #0b1530;
+  --color-indigo-950: #070e20;
+  --color-fuchsia-50: #f1f4fa;
+  --color-fuchsia-100: #e2e8f4;
+  --color-fuchsia-200: #c5d0e6;
+  --color-fuchsia-300: #9db0d3;
+  --color-fuchsia-400: #6b87bb;
+  --color-fuchsia-500: #3f5f9e;
+  --color-fuchsia-600: #1f3a75;
+  --color-fuchsia-700: #162c5c;
+  --color-fuchsia-800: #0f2147;
+  --color-fuchsia-900: #0b1530;
+  --color-fuchsia-950: #070e20;
+  --color-pink-50: #f1f4fa;
+  --color-pink-100: #e2e8f4;
+  --color-pink-200: #c5d0e6;
+  --color-pink-300: #9db0d3;
+  --color-pink-400: #6b87bb;
+  --color-pink-500: #3f5f9e;
+  --color-pink-600: #1f3a75;
+  --color-pink-700: #162c5c;
+  --color-pink-800: #0f2147;
+  --color-pink-900: #0b1530;
+  --color-pink-950: #070e20;
+  --color-blue-50: #f1f4fa;
+  --color-blue-100: #e2e8f4;
+  --color-blue-200: #c5d0e6;
+  --color-blue-300: #9db0d3;
+  --color-blue-400: #6b87bb;
+  --color-blue-500: #3f5f9e;
+  --color-blue-600: #1f3a75;
+  --color-blue-700: #162c5c;
+  --color-blue-800: #0f2147;
+  --color-blue-900: #0b1530;
+  --color-blue-950: #070e20;
+  --color-sky-50: #f1f4fa;
+  --color-sky-100: #e2e8f4;
+  --color-sky-200: #c5d0e6;
+  --color-sky-300: #9db0d3;
+  --color-sky-400: #6b87bb;
+  --color-sky-500: #3f5f9e;
+  --color-sky-600: #1f3a75;
+  --color-sky-700: #162c5c;
+  --color-sky-800: #0f2147;
+  --color-sky-900: #0b1530;
+  --color-sky-950: #070e20;
+  --color-cyan-50: #f1f4fa;
+  --color-cyan-100: #e2e8f4;
+  --color-cyan-200: #c5d0e6;
+  --color-cyan-300: #9db0d3;
+  --color-cyan-400: #6b87bb;
+  --color-cyan-500: #3f5f9e;
+  --color-cyan-600: #1f3a75;
+  --color-cyan-700: #162c5c;
+  --color-cyan-800: #0f2147;
+  --color-cyan-900: #0b1530;
+  --color-cyan-950: #070e20;
+  --color-teal-50: #f1f4fa;
+  --color-teal-100: #e2e8f4;
+  --color-teal-200: #c5d0e6;
+  --color-teal-300: #9db0d3;
+  --color-teal-400: #6b87bb;
+  --color-teal-500: #3f5f9e;
+  --color-teal-600: #1f3a75;
+  --color-teal-700: #162c5c;
+  --color-teal-800: #0f2147;
+  --color-teal-900: #0b1530;
+  --color-teal-950: #070e20;
+  --color-orange-50: #fbf7ec;
+  --color-orange-100: #f5ecd0;
+  --color-orange-200: #ebd9a3;
+  --color-orange-300: #dec173;
+  --color-orange-400: #d2ac52;
+  --color-orange-500: #c9a24b;
+  --color-orange-600: #b08a38;
+  --color-orange-700: #8c6c2d;
+  --color-orange-800: #6e5427;
+  --color-orange-900: #55421f;
+  --color-orange-950: #3a2c14;
+  --color-amber-50: #fbf7ec;
+  --color-amber-100: #f5ecd0;
+  --color-amber-200: #ebd9a3;
+  --color-amber-300: #dec173;
+  --color-amber-400: #d2ac52;
+  --color-amber-500: #c9a24b;
+  --color-amber-600: #b08a38;
+  --color-amber-700: #8c6c2d;
+  --color-amber-800: #6e5427;
+  --color-amber-900: #55421f;
+  --color-amber-950: #3a2c14;
+  --color-yellow-50: #fbf7ec;
+  --color-yellow-100: #f5ecd0;
+  --color-yellow-200: #ebd9a3;
+  --color-yellow-300: #dec173;
+  --color-yellow-400: #d2ac52;
+  --color-yellow-500: #c9a24b;
+  --color-yellow-600: #b08a38;
+  --color-yellow-700: #8c6c2d;
+  --color-yellow-800: #6e5427;
+  --color-yellow-900: #55421f;
+  --color-yellow-950: #3a2c14;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.3rem;
+  --radius-xl: 0.375rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.5rem;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #f7f5ef;
+  color: #1e293b;
+}
+.theme-upsc :is(h1, h2, h3) {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+.theme-upsc button { letter-spacing: 0.01em; }
+
+/* ---------- FOUNDATION: bright, rounded, interactive ---------- */
+.theme-foundation {
+  --color-blue-50: #f5f3ff;
+  --color-blue-100: #ede9fe;
+  --color-blue-200: #ddd6fe;
+  --color-blue-300: #c4b5fd;
+  --color-blue-400: #a78bfa;
+  --color-blue-500: #8b5cf6;
+  --color-blue-600: #7c3aed;
+  --color-blue-700: #6d28d9;
+  --color-blue-800: #5b21b6;
+  --color-blue-900: #4c1d95;
+  --color-blue-950: #2e1065;
+  --color-indigo-50: #f5f3ff;
+  --color-indigo-100: #ede9fe;
+  --color-indigo-200: #ddd6fe;
+  --color-indigo-300: #c4b5fd;
+  --color-indigo-400: #a78bfa;
+  --color-indigo-500: #8b5cf6;
+  --color-indigo-600: #7c3aed;
+  --color-indigo-700: #6d28d9;
+  --color-indigo-800: #5b21b6;
+  --color-indigo-900: #4c1d95;
+  --color-indigo-950: #2e1065;
+  --color-sky-50: #f5f3ff;
+  --color-sky-100: #ede9fe;
+  --color-sky-200: #ddd6fe;
+  --color-sky-300: #c4b5fd;
+  --color-sky-400: #a78bfa;
+  --color-sky-500: #8b5cf6;
+  --color-sky-600: #7c3aed;
+  --color-sky-700: #6d28d9;
+  --color-sky-800: #5b21b6;
+  --color-sky-900: #4c1d95;
+  --color-sky-950: #2e1065;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 2rem;
+  font-family: "Nunito", system-ui, sans-serif;
+  background: linear-gradient(180deg, #f5f3ff 0%, #ffffff 40%, #fdf2f8 100%);
+}
+.theme-foundation :is(h1, h2, h3) { font-weight: 900; }
+.theme-foundation button:not(:disabled),
+.theme-foundation a { transition: transform .15s ease, box-shadow .15s ease, filter .15s ease; }
+.theme-foundation button:not(:disabled):hover { transform: translateY(-2px); filter: brightness(1.04); }
+.theme-foundation button:not(:disabled):active { transform: scale(.96); }

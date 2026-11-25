@@ -1,0 +1,140 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import LevelBanner from '../components/LevelBanner.jsx';
+
+const Practice = () => {
+  const navigate = useNavigate();
+
+  const [selectedPracticeType, setSelectedPracticeType] = useState('mixed');
+
+  const handleStartPractice = () => {
+    if (selectedPracticeType === 'mixed') {
+      navigate('/MixedPractice');
+    } else {
+      navigate('/DifficultPractice');
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = { 
+    hidden: { opacity: 0, y: 20 }, 
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } } 
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        <LevelBanner active="foundation" />
+        {/* Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.6 }} 
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Practice Mode <span className="block text-2xl text-violet-600 mt-1">Foundation Level (Low)</span></h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            Choose your practice style to strengthen your skills
+          </p>
+        </motion.div>
+
+        {/* Main Settings Card */}
+        <motion.div 
+          variants={containerVariants} 
+          initial="hidden" 
+          animate="visible" 
+          className="bg-white rounded-3xl shadow-xl border border-blue-100 p-8 md:p-10 mb-8"
+        >
+
+          {/* Practice Type */}
+          <motion.div variants={itemVariants} className="mb-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">Practice Type</h3>
+            <div className="space-y-4">
+              
+              {/* Selection-Based Practice */}
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className={`relative p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${
+                  selectedPracticeType === 'selection' 
+                    ? 'border-blue-400 bg-blue-50 shadow-md' 
+                    : 'border-gray-200 bg-white hover:border-blue-200 hover:bg-blue-25'
+                }`}
+                onClick={() => setSelectedPracticeType('selection')}
+              >
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-500 rounded-xl flex items-center justify-center mr-3">
+                        <span className="text-white text-sm font-bold">🎯</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-gray-900">Selection-Based Practice</h4>
+                    </div>
+                    <p className="text-gray-600">Select specific topics or categories you want to practice</p>
+                  </div>
+                  <div className="ml-4">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      selectedPracticeType === 'selection' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                    }`}>
+                      {selectedPracticeType === 'selection' && <div className="w-3 h-3 bg-white rounded-full"></div>}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Mixed Practice */}
+              <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className={`relative p-6 border-2 rounded-2xl cursor-pointer transition-all duration-300 ${
+                  selectedPracticeType === 'mixed' 
+                    ? 'border-blue-400 bg-blue-50 shadow-md' 
+                    : 'border-gray-200 bg-white hover:border-blue-200 hover:bg-blue-25'
+                }`}
+                onClick={() => setSelectedPracticeType('mixed')}
+              >
+                <div className="flex items-center">
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2">
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center mr-3">
+                        <span className="text-white text-sm font-bold">🔀</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-gray-900">Mixed Practice</h4>
+                    </div>
+                    <p className="text-gray-600">Random questions from all categories for comprehensive practice</p>
+                  </div>
+                  <div className="ml-4">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      selectedPracticeType === 'mixed' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                    }`}>
+                      {selectedPracticeType === 'mixed' && <div className="w-3 h-3 bg-white rounded-full"></div>}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Start Button */}
+          <motion.div variants={itemVariants} className="flex justify-center">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleStartPractice}
+              className="px-12 py-4 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 flex items-center"
+            >
+              Start Practice Session
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+export default Practice;
